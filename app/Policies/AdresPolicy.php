@@ -13,7 +13,8 @@ class AdresPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        // Allow users to view their own addresses
+        return true;
     }
 
     /**
@@ -21,7 +22,8 @@ class AdresPolicy
      */
     public function view(User $user, Adres $adres): bool
     {
-        return false;
+        // Allow users to view their own address
+        return $user->id === $adres->user_id;
     }
 
     /**
@@ -29,7 +31,8 @@ class AdresPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        // Allow authenticated users to create addresses
+        return true;
     }
 
     /**
@@ -45,7 +48,8 @@ class AdresPolicy
      */
     public function delete(User $user, Adres $adres): bool
     {
-        return false;
+        // Allow users to delete their own address
+        return $user->id === $adres->user_id;
     }
 
     /**

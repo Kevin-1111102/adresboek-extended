@@ -4,8 +4,8 @@
     <div class="container">
         <h1>Adres bewerken</h1>
 
-        <form method="POST" action="{{ route('adressen.update', $adres->id) }}">
-            @csrf
+        <form method="POST" action="{{ route('adressen.update', $adres) }}">
+        @csrf
             @method('PUT')
 
             <div class="mb-3">

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Adres;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreAdresRequest;
+use App\Http\Requests\UpdateAdresRequest;
 
 class AdresController extends Controller
 {
@@ -21,53 +22,38 @@ class AdresController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Adres::class);
         return view('adressen.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAdresRequest $request)
     {
-        $request->validate([
-            'naam' => 'required|string|max:255|unique:adressen,naam,NULL,id,user_id,' . Auth::id(),
-            'straat' => 'required|string|max:255',
-            'huisnummer' => 'required|string|max:10',
-            'postcode' => ['required', 'string', 'regex:/^\d{4}\s?[A-Za-z]{2}$/'],
-            'stad' => 'required|string|max:255',
-        ]);
-
         Auth::user()->adressen()->create($request->only('naam', 'straat', 'huisnummer', 'postcode', 'stad'));
 
         return redirect()->route('adressen.index')->with('success', 'Adres toegevoegd!');
     }
 
-
-    public function edit($id)
+    public function edit(Adres $adres)
     {
-        $adres = Adres::findOrFail($id);
+        $this->authorize('view', $adres);
         return view('adressen.edit', compact('adres'));
     }
 
-
-    public function update(Request $request, $id)
+    public function update(UpdateAdresRequest $request, Adres $adres)
     {
-        $request->validate([
-            'naam' => 'required|string|max:255',
-            'straat' => 'required|string|max:255',
-            'huisnummer' => 'required|string|max:10',
-            'postcode' => 'required|string|max:10',
-            'stad' => 'required|string|max:255',
-        ]);
+        $this->authorize('update', $adres);
 
-        $adres = Adres::findOrFail($id);
-        $adres->update($request->all());
+        $adres->update($request->only('naam', 'straat', 'huisnummer', 'postcode', 'stad'));
 
         return redirect()->route('adressen.index')->with('success', 'Adres bijgewerkt!');
     }
 
-    public function destroy($id)
+    public function destroy(Adres $adres)
     {
-        $adres = Adres::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $this->authorize('delete', $adres);
+
         $adres->delete();
+
         return response()->json(['success' => true]);
     }
-
 }

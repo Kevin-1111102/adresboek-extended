@@ -14,11 +14,13 @@ class UpdateAdresRequest extends FormRequest
 
     public function rules()
     {
+        $adres = $this->route('adres') ? $this->route('adres')->id : null;
+
         return [
-            'naam' => 'required|string|max:255',
+            'naam' => 'required|string|max:255|unique:adressen,naam,' . $adres . ',id,user_id,' . auth()->id(),
             'straat' => 'required|string|max:255',
             'huisnummer' => 'required|string|max:10',
-            'postcode' => 'required|string|max:10',
+            'postcode' => ['required', 'string', 'regex:/^\d{4}\s?[A-Za-z]{2}$/'],
             'stad' => 'required|string|max:255',
         ];
     }

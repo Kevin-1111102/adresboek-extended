@@ -48,7 +48,6 @@ class AdresPolicy
      */
     public function delete(User $user, Adres $adres): bool
     {
-        // Allow users to delete their own address
         return $user->id === $adres->user_id;
     }
 

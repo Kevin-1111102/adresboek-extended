@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Adres;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreAdresRequest;
-use App\Http\Requests\UpdateAdresRequest;
+use App\Http\Requests\AdresRequest;
 
 class AdresController extends Controller
 {
@@ -26,7 +25,7 @@ class AdresController extends Controller
         return view('adressen.create');
     }
 
-    public function store(StoreAdresRequest $request)
+    public function store(AdresRequest $request)
     {
         Auth::user()->adressen()->create($request->only('naam', 'straat', 'huisnummer', 'postcode', 'stad'));
 
@@ -39,7 +38,7 @@ class AdresController extends Controller
         return view('adressen.edit', compact('adres'));
     }
 
-    public function update(UpdateAdresRequest $request, Adres $adres)
+    public function update(AdresRequest $request, Adres $adres)
     {
         $this->authorize('update', $adres);
 
